@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Window</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        #chatWindow {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+        }
+
+        .message {
+            margin: 5px 0;
+        }
+
+        .sender {
+            font-weight: bold;
+        }
+
+        .timestamp {
+            font-size: small;
+            color: gray;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 60px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #5cb85c;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 50px;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Chat with <span id="chatWith"></span></h2>
+        <div id="chatWindow">
+            <!-- Messages will be displayed here -->
+        </div>
+
+        <input type="text" id="messageInput" placeholder="Type your message here...">
+        <button id="sendMessage">Send</button>
+    </div>
+
+    <script>
+        const chatWindow = document.getElementById('chatWindow');
+        const messageInput = document.getElementById('messageInput');
+        const sendMessageButton = document.getElementById('sendMessage');
+        const chatWithElement = document.getElementById('chatWith');
+
+        const searchParams = new URLSearchParams(window.location.search);
+        const chatWith = searchParams.get('chatWith');
+        const callingUrl = new URL(window.location.href);
+        const userName = decodeURIComponent(callingUrl.searchParams.get('userName'));
+        chatWithElement.textContent = userName;
+
+        sendMessageButton.addEventListener('click', function() {
+            const messageText = messageInput.value.trim();
+            if (messageText) {
+                const messageElement = document.createElement('div');
+                messageElement.className = 'message';
+                messageElement.style.textAlign = 'right';
+                messageElement.innerHTML = `<span class="sender">You:</span> ${messageText}<br><span class="timestamp">${new Date().toLocaleTimeString()}</span>`;
+                chatWindow.appendChild(messageElement);
+                messageInput.value = '';
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>
+    <style>
+        #userList {
+            position: fixed;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            overflow-y: scroll;
+            z-index: 1;
+        }
+    </style>
+    <ul id="userList" style="top: 50px;">
+        <li>Jane Doe <button onclick="startChatWindow('Jane Doe')">Start Chat</button></li>
+        <li>John Smith <button onclick="startChatWindow('John Smith')">Start Chat</button></li>
+
+<script>
+    function startChatWindow(chatWith) {
+        window.open(`MUC_Chatwindowui.html?userName=${encodeURIComponent(userName)}&chatWith=${encodeURIComponent(chatWith)}`, '_blank');
+    }
+</script>
+        <!-- More users will be listed here -->
+    </ul>
