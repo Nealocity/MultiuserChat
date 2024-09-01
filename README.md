@@ -1,2 +1,2 @@
 # MultiuserChat
-# MUC with db changes 
+MUC with db changes 
