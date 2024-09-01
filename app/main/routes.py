@@ -1,6 +1,10 @@
-from flask import redirect, url_for
-from app.main import main
+from flask import Blueprint, render_template
+from flask_login import login_required
+
+main = Blueprint('main', __name__)
 
 @main.route('/')
-def index():
-    return redirect(url_for('auth.login'))
+@login_required
+def dashboard():
+    # Logic to fetch and display user dashboard
+    return render_template('MUC_listuserui.html')

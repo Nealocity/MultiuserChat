@@ -1,20 +1,33 @@
-from flask import request, jsonify, render_template, redirect, url_for
-from flask.views import MethodView
-from app.auth import auth
+from app import auth
+from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask_login import login_user, logout_user, login_required
+from werkzeug.security import check_password_hash
+from app.models import User
+from app.extensions import db
 
-class LoginAPI(MethodView):
-    def get(self):
-        return render_template('MUC_loginui.html')  # Render the login HTML page
+auth = Blueprint('auth', __name__)
 
-    def post(self):
-        data = request.form
-        username = data.get('username')
-        password = data.get('password')
-        # Here you'd normally authenticate the user
-        if username == "admin" and password == "password":
-            return jsonify({"message": "Login successful"}), 200
-        return jsonify({"error": "Invalid username or password"}), 400
+@auth.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = User.query.filter_by(username=username).first()
+        
+        if user and check_password_hash(user.password_hash, password):
+            login_user(user)
+            return redirect(url_for('main.index'))
+        else:
+            flash('Invalid username or password', 'error')
 
-# Add the URL rule for login using the `MethodView`
-login_view = LoginAPI.as_view('login')
-auth.add_url_rule('/login', view_func=login_view, methods=['GET', 'POST'])
+    return render_template('MUC_loginui.html')
+
+@auth.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('auth.login'))
+
+@auth.route('/register', methods=['GET', 'POST'])
+def register():
+    # Registration logic
+    return render_template('MUC_register.html')
